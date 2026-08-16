@@ -1,0 +1,9 @@
+{
+  "name": "create-hauz-account",
+  "version": "1.0.0",
+  "description": "Appwrite function to provision HAUZ records upon email verification",
+  "main": "index.js",
+  "dependencies": {
+    "node-appwrite": "^28.0.0"
+  }
+}
