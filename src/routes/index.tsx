@@ -4,11 +4,9 @@ import {
   Shield,
   Key,
   Users,
-  Database,
   ArrowRight,
   CheckCircle,
   Building,
-  UserCheck,
   Layers,
   Sparkles,
 } from 'lucide-react'

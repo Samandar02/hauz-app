@@ -53,7 +53,7 @@ async function createAttributeSafely(
   key: string
 ) {
   try {
-    process.stdout.write(`  - Creating attribute '${key}'... `)
+    process.stdout.write(`  - Creating attribute '${name}' (${key})... `)
     await fn()
     await waitForAttribute(dbId, collId, key)
     console.log('✅')

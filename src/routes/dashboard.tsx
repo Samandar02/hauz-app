@@ -9,13 +9,9 @@ import {
   LogOut,
   CheckCircle2,
   AlertCircle,
-  Phone,
-  Mail,
-  Calendar,
   Layers,
   Code2,
   RefreshCw,
-  Clock,
   Sparkles,
 } from 'lucide-react'
 

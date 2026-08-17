@@ -1,4 +1,4 @@
-# HAUZ Backend Interview Task - Personal Account Authentication
+# HAUZ - Personal Account Authentication
 
 Production-grade implementation of the **HAUZ Personal Account Authentication System** using **TypeScript**, **TanStack Router**, **Tailwind CSS**, and **Appwrite** (Auth, Databases/TablesDB, and Functions).
 

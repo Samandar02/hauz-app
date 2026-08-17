@@ -1,13 +1,11 @@
-import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import type { PersonalRoleValue } from '../types/hauz'
 import {
-  User,
   Mail,
   Lock,
   Phone,
-  Building,
   CheckCircle2,
   AlertCircle,
   ArrowRight,
@@ -21,8 +19,7 @@ export const Route = createFileRoute('/register')({
 })
 
 function RegisterPage() {
-  const { register, resendVerification, user } = useAuth()
-  const navigate = useNavigate()
+  const { register, resendVerification } = useAuth()
 
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')

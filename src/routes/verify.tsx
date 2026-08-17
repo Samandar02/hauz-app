@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import {
@@ -6,7 +6,6 @@ import {
   AlertCircle,
   Mail,
   ArrowRight,
-  ShieldCheck,
   Send,
   Loader2,
   Key,
@@ -29,8 +28,7 @@ export const Route = createFileRoute('/verify')({
 
 function VerifyPage() {
   const { userId, secret } = Route.useSearch()
-  const { user, bundle, completeVerification, resendVerification, refreshUser } = useAuth()
-  const navigate = useNavigate()
+  const { user, bundle, completeVerification, resendVerification } = useAuth()
 
   const [status, setStatus] = useState<'idle' | 'verifying' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState<string | null>(null)

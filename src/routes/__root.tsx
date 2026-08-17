@@ -9,7 +9,6 @@ import {
   LogOut,
   LogIn,
   UserPlus,
-  Home as HomeIcon,
   CheckCircle2,
   AlertCircle,
 } from 'lucide-react'

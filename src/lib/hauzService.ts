@@ -215,8 +215,8 @@ export async function provisionHauzRecords(params: ProvisionHauzAccountParams) {
     // Step A: Create HAUZ Account
     // Fields: account_type (individual), status (active), terminated_at (null), current_access_grant_id (grantId)
     const accountPayload = {
-      account_type: 'individual',
-      status: 'active',
+      account_type: 'individual' as const,
+      status: 'active' as const,
       terminated_at: null,
       current_access_grant_id: grantId,
     }

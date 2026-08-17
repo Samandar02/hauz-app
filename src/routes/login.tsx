@@ -10,7 +10,6 @@ import {
   Send,
   Loader2,
   AlertTriangle,
-  ArrowRight,
 } from 'lucide-react'
 
 export const Route = createFileRoute('/login')({
