@@ -77,8 +77,10 @@ VITE_APPWRITE_COLLECTION_PERSONAL_ACCOUNTS_ID=personal_accounts
 APPWRITE_API_KEY=your_secret_api_key_here
 ```
 
-### 4. Run Automated Database & Schema Setup
-Run the one-click migration CLI to automatically create the database, all 4 collections, attributes, indexes, and seed the `consumer` and `realtor` roles:
+### 4. Database & Schema Setup (Optional)
+> **Note**: If your Appwrite project already has the HAUZ database and collections created, **skip this step**.
+>
+> If you are connecting to a fresh/empty Appwrite project, you can run this automated script to create the database, all 4 collections, attributes, indexes, and seed the `consumer` and `realtor` roles in one command:
 
 ```bash
 npm run setup:appwrite
