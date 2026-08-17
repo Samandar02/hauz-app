@@ -1,15 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
-import {
-  CheckCircle2,
-  AlertCircle,
-  Mail,
-  ArrowRight,
-  Send,
-  Loader2,
-  Key,
-} from 'lucide-react'
 
 interface VerifySearchParams {
   userId?: string
@@ -34,7 +25,6 @@ function VerifyPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [resendStatus, setResendStatus] = useState<string | null>(null)
 
-  // Manual input state for testing
   const [manualUserId, setManualUserId] = useState('')
   const [manualSecret, setManualSecret] = useState('')
 
@@ -54,7 +44,7 @@ function VerifyPage() {
       console.error('Verification error:', err)
       setStatus('error')
       setErrorMessage(
-        err?.message || 'Email verification or HAUZ record creation failed. Please check the link or request a new one.'
+        err?.message || 'Email verification failed. The link may have expired or already been used.'
       )
     }
   }
@@ -79,201 +69,101 @@ function VerifyPage() {
     executeVerification(manualUserId.trim(), manualSecret.trim())
   }
 
-  // 1. Verifying State
   if (status === 'verifying') {
     return (
-      <div className="max-w-md mx-auto px-4 py-16 text-center space-y-6">
-        <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-xl space-y-4">
-          <div className="w-16 h-16 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto">
-            <Loader2 className="w-8 h-8 animate-spin" />
-          </div>
-          <h2 className="text-2xl font-bold text-slate-900">Verifying Email & Provisioning HAUZ Records...</h2>
-          <p className="text-sm text-slate-500">
-            Validating security secret and building accounts, grants, and personal profile in Appwrite database.
-          </p>
-        </div>
+      <div className="max-w-md mx-auto bg-white p-6 rounded-lg border border-gray-200 shadow-sm text-center">
+        <h2 className="text-lg font-bold text-gray-900 mb-2">Verifying Email...</h2>
+        <p className="text-xs text-gray-500">Creating HAUZ accounts and personal profile records.</p>
       </div>
     )
   }
 
-  // 2. Success State
   if (status === 'success' || (user?.emailVerification && bundle?.hasHauzRecords)) {
     return (
-      <div className="max-w-lg mx-auto px-4 py-14">
-        <div className="bg-white p-8 rounded-3xl border border-emerald-200 shadow-xl text-center space-y-6">
-          <div className="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto shadow-inner">
-            <CheckCircle2 className="w-10 h-10" />
-          </div>
+      <div className="max-w-md mx-auto bg-white p-6 rounded-lg border border-gray-200 shadow-sm space-y-4">
+        <h2 className="text-lg font-bold text-emerald-700">Verification Complete</h2>
+        <p className="text-sm text-gray-600">
+          Your email has been verified and your HAUZ account has been created.
+        </p>
 
-          <div className="space-y-2">
-            <h2 className="text-2xl font-extrabold text-slate-900">
-              Registration & Verification Complete!
-            </h2>
-            <p className="text-sm text-slate-600">
-              Your email has been verified and your HAUZ account has been successfully provisioned.
-            </p>
-          </div>
-
-          {/* Provisioned Records Summary */}
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-left space-y-2 text-xs">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-200 font-bold text-slate-700">
-              <span>Created HAUZ Records</span>
-              <span className="text-emerald-600 font-mono">STATUS: ACTIVE</span>
-            </div>
-            <div className="flex justify-between text-slate-600">
-              <span>Account Type:</span>
-              <span className="font-semibold text-slate-900 capitalize">{bundle?.account?.account_type || 'individual'}</span>
-            </div>
-            <div className="flex justify-between text-slate-600">
-              <span>Personal Role:</span>
-              <span className="font-bold text-blue-600 capitalize">{bundle?.personalRole?.value || 'consumer'}</span>
-            </div>
-            <div className="flex justify-between text-slate-600">
-              <span>Account ID:</span>
-              <span className="font-mono text-slate-700 text-[11px] truncate max-w-[180px]">
-                {bundle?.account?.$id || 'Generated UUID'}
-              </span>
-            </div>
-          </div>
-
-          <Link
-            to="/dashboard"
-            className="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-lg shadow-blue-600/20 transition-all flex items-center justify-center gap-2"
-          >
-            Open Dashboard
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+        <div className="p-3 bg-gray-50 rounded border border-gray-200 text-xs space-y-1">
+          <p><strong>Account Type:</strong> {bundle?.account?.account_type || 'individual'}</p>
+          <p><strong>Role:</strong> {bundle?.personalRole?.value || 'consumer'}</p>
+          <p><strong>Status:</strong> {bundle?.account?.status || 'active'}</p>
         </div>
+
+        <Link
+          to="/dashboard"
+          className="block w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-center font-medium text-sm"
+        >
+          Open Dashboard
+        </Link>
       </div>
     )
   }
 
-  // 3. Error State
-  if (status === 'error') {
-    return (
-      <div className="max-w-lg mx-auto px-4 py-14">
-        <div className="bg-white p-8 rounded-3xl border border-red-200 shadow-xl text-center space-y-6">
-          <div className="w-16 h-16 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center mx-auto">
-            <AlertCircle className="w-10 h-10" />
-          </div>
-
-          <div className="space-y-2">
-            <h2 className="text-2xl font-extrabold text-slate-900">
-              Verification Failed
-            </h2>
-            <p className="text-sm text-red-600 bg-red-50 p-3 rounded-xl border border-red-100">
-              {errorMessage || 'The verification link may have expired or is invalid.'}
-            </p>
-          </div>
-
-          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
-            {user && (
-              <button
-                onClick={handleResend}
-                disabled={resendStatus === 'sending'}
-                className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-semibold text-sm hover:bg-slate-50 transition-colors inline-flex items-center justify-center gap-2"
-              >
-                <Send className="w-3.5 h-3.5" />
-                {resendStatus === 'sending' ? 'Sending...' : 'Request New Link'}
-              </button>
-            )}
-            <Link
-              to="/login"
-              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-900 text-white font-semibold text-sm hover:bg-slate-800 transition-colors inline-flex items-center justify-center gap-2"
-            >
-              Go to Login
-            </Link>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  // 4. Default / Pending Verification View
   return (
-    <div className="max-w-xl mx-auto px-4 py-12 space-y-8">
-      <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-xl text-center space-y-6">
-        <div className="w-16 h-16 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mx-auto">
-          <Mail className="w-8 h-8" />
-        </div>
+    <div className="max-w-md mx-auto space-y-6">
+      <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm space-y-4">
+        <h1 className="text-xl font-bold text-gray-900">Email Verification</h1>
+        {status === 'error' && (
+          <div className="p-3 rounded bg-red-50 border border-red-200 text-xs text-red-700">
+            {errorMessage}
+          </div>
+        )}
 
-        <div className="space-y-2">
-          <h2 className="text-2xl font-extrabold text-slate-900">
-            Email Verification Status
-          </h2>
-          <p className="text-sm text-slate-600">
-            {user ? (
-              <>
-                Signed in as <strong className="text-slate-900">{user.email}</strong>.
-                {user.emailVerification ? (
-                  <span className="block text-emerald-600 font-semibold mt-1">Your email is verified.</span>
-                ) : (
-                  <span className="block text-amber-600 font-semibold mt-1">Verification link is pending.</span>
-                )}
-              </>
-            ) : (
-              'Please open the verification link sent to your email address.'
-            )}
-          </p>
-        </div>
+        <p className="text-sm text-gray-600">
+          {user ? (
+            <>
+              Current user: <strong>{user.email}</strong> ({user.emailVerification ? 'Verified' : 'Unverified'})
+            </>
+          ) : (
+            'Please open the verification link sent to your email.'
+          )}
+        </p>
 
         {user && !user.emailVerification && (
-          <div className="pt-2">
-            <button
-              onClick={handleResend}
-              disabled={resendStatus === 'sending'}
-              className="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-lg shadow-blue-600/20 transition-all flex items-center justify-center gap-2"
-            >
-              <Send className="w-4 h-4" />
-              {resendStatus === 'sending'
-                ? 'Sending...'
-                : resendStatus === 'sent'
-                ? 'Verification Email Sent ✅'
-                : 'Send Verification Email'}
-            </button>
-          </div>
+          <button
+            onClick={handleResend}
+            disabled={resendStatus === 'sending'}
+            className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium text-sm transition-colors"
+          >
+            {resendStatus === 'sending' ? 'Sending...' : resendStatus === 'sent' ? 'Sent Again' : 'Send Verification Email'}
+          </button>
         )}
       </div>
 
-      {/* Manual Token Verification (For Development & Testing) */}
-      <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
-        <div className="flex items-center gap-2 text-sm font-bold text-slate-800">
-          <Key className="w-4 h-4 text-blue-600" />
-          <span>Manual Token Entry (Development & Testing)</span>
-        </div>
-        <p className="text-xs text-slate-500">
-          If you are testing locally or have a manual Appwrite verification URL, enter the parameters below:
-        </p>
-
-        <form onSubmit={handleManualSubmit} className="space-y-3">
+      {/* Manual Entry for Local Testing */}
+      <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm text-xs space-y-3">
+        <h3 className="font-bold text-gray-800">Manual Verification (Local Testing)</h3>
+        <form onSubmit={handleManualSubmit} className="space-y-2">
           <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1">User ID</label>
+            <label className="block text-gray-600 mb-0.5">User ID</label>
             <input
               type="text"
               value={manualUserId}
               onChange={(e) => setManualUserId(e.target.value)}
-              placeholder="e.g. 64a8b..."
-              className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
+              className="w-full px-2 py-1 border border-gray-300 rounded font-mono"
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1">Secret</label>
+            <label className="block text-gray-600 mb-0.5">Secret</label>
             <input
               type="text"
               value={manualSecret}
               onChange={(e) => setManualSecret(e.target.value)}
-              placeholder="e.g. 9b8c..."
-              className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
+              className="w-full px-2 py-1 border border-gray-300 rounded font-mono"
             />
           </div>
           <button
             type="submit"
-            className="w-full py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-xs font-bold transition-colors"
+            className="w-full py-1.5 bg-gray-800 hover:bg-gray-900 text-white rounded font-medium"
           >
-            Execute Verification
+            Verify
           </button>
         </form>
       </div>
     </div>
   )
 }
+
